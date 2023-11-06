@@ -2,13 +2,18 @@
 
 import React, {useState} from 'react'
 import { AiOutlineClose } from 'react-icons/ai';
-import Register from './auth/Register';
-import Login from './auth/Login';
 import { useGeneralStore } from '../stores/general';
+import dynamic from 'next/dynamic';
 
 const AuthOverlay = () => {
-    let {setIsLoginOpen} = useGeneralStore();
-    let [isRegister, setIsRegister] = useState<boolean>(false);
+  let {setIsLoginOpen} = useGeneralStore();
+  let [isRegister, setIsRegister] = useState<boolean>(false);
+  
+  // import Login from './auth/Login';
+  const Login = dynamic(() => import('./auth/Login'), {ssr: false});
+  
+  // import Register from './auth/Register';
+  const Register = dynamic(() => import('./auth/Register'), {ssr: false});
 
   return (
     <>

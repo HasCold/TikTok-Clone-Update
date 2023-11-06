@@ -1,14 +1,15 @@
 'use client'
 
-import React, { useEffect } from 'react'
+import React, { useEffect, useMemo } from 'react'
 import MainLayout from '@/app/layouts/MainLayout'
 import ClientOnly from '@/app/components/ClientOnly'
 import { BsPencil } from 'react-icons/bs'
-import PostUser from '@/app/components/profile/PostUser'
 import { useUser } from '@/app/context/user'
 import { usePostStore } from '@/app/stores/post'
 import { useProfileStore } from '@/app/stores/profile'
 import { useGeneralStore } from '@/app/stores/general'
+import { useImageStore } from '@/app/stores/image'
+import dynamic from 'next/dynamic'
 
 interface ProfilePageProps {
   params: {id: string}
@@ -19,11 +20,29 @@ const Profile: React.FC<ProfilePageProps> = ({params}) => {
   let {postsByUser, setPostsByUser} = usePostStore();  
   let {setCurrentProfile, currentProfile} = useProfileStore();
   let {isEditProfileOpen, setIsEditProfileOpen, user, token} = useGeneralStore();
+  let {setCurrentImage, currentImage} = useImageStore(); 
 
   useEffect(() => {
-    setCurrentProfile(params?.id, token);
+    // setCurrentProfile(user?.user_id, token);
+    setCurrentProfile(params?.id, token)
     setPostsByUser(params?.id, token);
-  }, [])
+    setCurrentImage(params?.id, token);
+}, []);
+
+  useEffect(() => {    
+    setCurrentImage(params?.id, token)
+  }, [currentProfile]); 
+
+// import PostUser from '@/app/components/profile/PostUser'
+const PostUser = useMemo(() => dynamic(() => import("@/app/components/profile/PostUser"), {ssr: false}), [postsByUser, setPostsByUser])
+
+const MemoizedPostByUserComponent = useMemo(() => {
+  return Array.isArray(postsByUser) ? (  // Array.isArray()  --> Return boolean   
+  postsByUser.map((post, index) => (
+    <PostUser key={index} post={post} />            
+    ))) : null 
+}, [postsByUser, setPostsByUser, currentProfile]);
+
 
   return (    
     <>
@@ -33,7 +52,7 @@ const Profile: React.FC<ProfilePageProps> = ({params}) => {
       <div className='flex w-[calc(100vw-230px)]'>
         <ClientOnly>
           {currentProfile ? (
-            <img className='w-[120px] min-w-[120px] rounded-full' src={`${process.env.IMAGES_PORT_URL}/1699217377296-HasCold Image.jpg`} alt="logo" />
+            <img className='w-[120px] h-[120px] min-w-[120px] rounded-full' src={`${process.env.IMAGES_PORT_URL}/${currentImage?.fileName}`} alt="logo" />
           ) : (
             <div className="min-w-[150px] h-[120px] bg-gray-200 rounded-full" />
           )}
@@ -51,7 +70,7 @@ const Profile: React.FC<ProfilePageProps> = ({params}) => {
               )}
             </ClientOnly>
         
-        {user?.user_id == params?.id ? (
+        {user?.user_id === currentProfile?.user_id ? (
           <button 
           onClick={() => setIsEditProfileOpen(isEditProfileOpen = !isEditProfileOpen)}
           className='flex item-center rounded-md py-1.5 px-3.5 mt-3 text-[15px] font-semibold border hover:bg-gray-100'
@@ -93,12 +112,7 @@ const Profile: React.FC<ProfilePageProps> = ({params}) => {
 
       <ClientOnly>
         <div className='mt-4 grid 2xl:grid-cols-6 xl:grid-cols-5 lg:grid-cols-4 md:grid-cols-3 grid-cols-2 gap-3'>
-        { Array.isArray(postsByUser) ? (  // Array.isArray()  --> Return boolean   
-          postsByUser.map((post, index) => (
-            <PostUser key={index} post={post} />            
-            ))) : null 
-          }
-
+        {MemoizedPostByUserComponent}
             </div>
             </ClientOnly>
             

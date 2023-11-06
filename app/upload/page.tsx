@@ -1,7 +1,6 @@
 'use client'
 
 import { useRouter } from 'next/navigation';
-import UploadLayout from '../layouts/UploadLayout';
 import React, { useEffect, useState } from 'react'
 import { BiLoaderCircle, BiSolidCloudUpload } from 'react-icons/bi';
 import { AiOutlineCheckCircle } from 'react-icons/ai';
@@ -10,14 +9,15 @@ import { useUser } from '../context/user';
 import { useGeneralStore } from '../stores/general';
 import useCreatePost from '../hooks/useCreatePost';
 import { useProfileStore } from '../stores/profile';
+import UploadLayout from '../layouts/UploadLayout';
 
 interface UploadError {
     type: string,
     message: string,
-}
-
-const page = () => {
+  }
   
+  const page = () => {
+    
     const router = useRouter();
     const contextUser = useUser();
 

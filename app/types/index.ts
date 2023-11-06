@@ -61,3 +61,5 @@ export type CommentWithProfile = {
     comment: string;
     createdAt: string;
 } 
+
+export type Image = Pick<Post, "_id" | "fileName">

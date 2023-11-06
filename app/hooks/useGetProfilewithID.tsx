@@ -1,9 +1,9 @@
 
-const getProfilewithID = async (userId: string | undefined, token: string | null) => {
+const getProfilewithID = async (profileId: string | undefined, token: string | null) => {
 
     try {
 
-        const res = await fetch(`/api/profile/getProfileInfo?userId=${userId}`, {
+        const res = await fetch(`/api/profile/getProfileInfo?profileId=${profileId}`, {
             method: "GET",
             headers: {
                 "Authorization": `Bearer ${token}` 

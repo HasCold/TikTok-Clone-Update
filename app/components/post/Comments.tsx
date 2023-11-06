@@ -61,8 +61,6 @@ const addComment = async () => {
     }
 }
 
-    console.log(currentProfile);
-
   return (
     <>
     <div 

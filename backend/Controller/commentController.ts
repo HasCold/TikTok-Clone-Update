@@ -11,6 +11,9 @@ export const createComment = asyncErrorHandler(async (req: Request, res: Respons
         const postId = req.query.postId;
         const {comment} = req.body;
 
+        console.log(profileId);
+        console.log(postId);
+
         if(!postId || !profileId) return errorHandler(res, 404, "Id not Found");
         if(!comment) return errorHandler(res, 400, "Please also do the comment");
 
@@ -65,13 +68,10 @@ export const deleteComment = asyncErrorHandler(async (req: Request, res: Respons
     try {
         if(req.method !== "DELETE") return errorHandler(res, 500, "Only DELETE method is allowed");
 
-        const {commentId} = req.body;
-        if(!commentId) return errorHandler(res, 400, "Comment not found");
+        const {commentId} = req.query;
+        if(!commentId) return errorHandler(res, 400, "Comment Id not found");
 
-        const deletedComment = await Comment.findOneAndDelete({_id: commentId});
-        if (!deletedComment) {
-            return errorHandler(res, 404, "Comment not found");
-        }
+        await Comment.findOneAndDelete({_id: commentId});
 
         res.status(200).json({
             success: true,

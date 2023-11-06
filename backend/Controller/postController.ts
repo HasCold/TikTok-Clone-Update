@@ -55,7 +55,7 @@ export const uploadVideo = asyncErrorHandler(async (req: Request, res: Response)
 });
 
 
-// Get All Videos
+// Get All Videos By ProfileId
 export const getVideosByProfileId = asyncErrorHandler(async (req: Request, res: Response) => {
     try {
         if(req.method !== "GET") return errorHandler(res, 500, "Only GET method is allowed");
@@ -71,7 +71,7 @@ export const getVideosByProfileId = asyncErrorHandler(async (req: Request, res: 
         // })
         if(!data) return errorHandler(res, 404, "POST Not Found");
 
-        res.status(200).json({
+        res.status(201).json({
             success: true,
             data
         })

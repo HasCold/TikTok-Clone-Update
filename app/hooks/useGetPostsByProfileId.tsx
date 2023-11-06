@@ -3,7 +3,7 @@ const useGetPostsByProfileId = async (profileId: string, token: string | null) =
 
     try {
 
-        const res = await fetch(`api/post/${profileId}/getVideos`, {
+        const res = await fetch(`/api/post/${profileId}/getVideos`, {
             method: "GET",
             headers: {
                 'Content-Type': 'application/json',

@@ -79,6 +79,29 @@ export const retrieveImage = asyncErrorHandler(async (req: Request, res: Respons
 
 
 // Get Image filename by profileId
+export const getImageFileNameByProfileId = asyncErrorHandler(async (req: Request, res: Response) => {
+    try {
+        if(req.method !== "GET") return errorHandler(res, 500, "Only GET method is allowed");
+
+        const {profileId} = req.params
+        if(!profileId) return errorHandler(res, 403, "ID is missing");
+
+        const imageData = await userImage.findOne({userId: profileId}).select("fileName");     
+
+        res.status(201).json({
+            success: true,
+            imageData
+        });
+
+    } catch (error) {
+        res.status(500).json({
+            success: false,
+            message: "Filename couldn't found or something error",
+            error: error
+        });
+        console.error(error);
+    }
+})
 
 
 //  Function to delete multiple files from both database and the file system

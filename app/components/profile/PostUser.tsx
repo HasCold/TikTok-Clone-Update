@@ -35,7 +35,7 @@ const PostUser: React.FC<PostUserTypes> = ({post}) => {
           className="aspect-[3/4] object-cover ml-4 rounded-md"
           loop
           muted
-          src={post?.originalName}
+          src={`${process.env.SERVER_POST_URL}/${post.fileName}`}
           />
         </Link>
         )}

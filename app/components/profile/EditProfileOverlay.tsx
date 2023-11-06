@@ -104,8 +104,8 @@ const cropAndUpdateImage = async () => {
         if(!file) return alert("You don't have any file")
         if(!cropper) return alert("You don't have any file")
         setIsUpdating(true);
-        const newFileName: undefined | string | Error = await useChangeUserImage(file, currentProfile, cropper, userImage, token);
-        await useUpdateProfileImage(currentProfile?._id || "", newFileName, token);   // Update the image in profile model
+        const newImageURL: undefined | string | Error = await useChangeUserImage(file, currentProfile, cropper, userImage, token);
+        await useUpdateProfileImage(currentProfile?._id || "", newImageURL, token);   // Update the image in profile model
 
         await contextUser?.checkUser();
 
@@ -168,7 +168,7 @@ const cropAndUpdateImage = async () => {
 
                     <input 
                     type="file"
-                    // className='hidden'
+                    className='hidden'
                     id='image'  // This is now connected to our label tag
                     onChange={getUploadedImage}
                     accept="image/png, image/jpeg, image/jpg"

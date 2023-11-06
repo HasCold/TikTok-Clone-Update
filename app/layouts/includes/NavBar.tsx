@@ -22,7 +22,7 @@ const NavBar = () => {
     const [searchProfile, setSearchProfile] = useState<RandomUsers[]>([]);
     let [showMenu, setShowMenu] = useState<boolean>(false);
     let {setIsLoginOpen, setIsEditProfileOpen, token, user} = useGeneralStore();
-    // let {currentProfile} = useProfileStore();
+    let {currentProfile, setCurrentProfile} = useProfileStore();
 
     useEffect(() => {
         setIsEditProfileOpen(false)
@@ -45,6 +45,7 @@ const NavBar = () => {
 
     const goto = () => {
         if(!user) return setIsLoginOpen(true);
+
         router.push('/upload');
     }
 
@@ -118,6 +119,7 @@ const NavBar = () => {
                     <div className="absolute bg-white rounded-lg py-1.5 w-[200px] shadow-xl border top-[40px] right-0">
                         <button
                         onClick={() => {
+                            setCurrentProfile(user?.user_id, token)
                             router.push(`/profile/${user?.user_id}`)
                             setShowMenu(false)
                         }}

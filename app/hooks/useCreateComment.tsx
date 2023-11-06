@@ -3,7 +3,7 @@ const useCreateComment = async (profileId: string | undefined, postId: string, c
     
     try {
 
-        const res = await fetch(`/api/comment/createComment/${profileId}?posId=`+ postId, {
+        const res = await fetch(`/api/comment/createComment/${profileId}?postId=`+postId, {
             method: 'POST',
             headers: {
                 "Content-Type": "application/json",

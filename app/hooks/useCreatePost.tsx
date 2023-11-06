@@ -13,7 +13,7 @@ const useCreatePost = async (file: File, profileId: string | undefined, caption:
         const res = await fetch(`/api/post/${profileId}/videoUpload`, {
             method: 'POST',
             headers: {
-                "Content-Type": "application/json",
+                // "Content-Type": "video/mp4",
                 "Authorization": `Bearer ${token}`
             },
             body: formData

@@ -1,12 +1,15 @@
 'use client'
+import dynamic from "next/dynamic";
 import { useGeneralStore } from "../stores/general";
 import AuthOverlay from "./AuthOverlay";
 import ClientOnly from "./ClientOnly";
-import EditProfileOverlay from "./profile/EditProfileOverlay";
 
 const AllOverlay = () => {
-    let {isLoginOpen, isEditProfileOpen} = useGeneralStore();  
+  let {isLoginOpen, isEditProfileOpen} = useGeneralStore();  
   
+  // import EditProfileOverlay from './profile/EditProfileOverlay';
+  const EditProfileOverlay = dynamic(() => import('./profile/EditProfileOverlay'), {ssr: false});
+
   return (
     <>
     <ClientOnly>

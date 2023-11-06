@@ -1,8 +1,11 @@
 import { create } from "zustand";
 import { createJSONStorage, devtools, persist } from "zustand/middleware";
+import { Image } from "../types";
+import useRetreiveImage from "../hooks/useRetreiveImage";
 
 interface ImageStore {
-    currentImage: null;
+    currentImage: Image | null | undefined;
+    setCurrentImage: (profileId: string | undefined, token: string | null) => void
 }
 
 export const useImageStore = create<ImageStore>()(
@@ -11,8 +14,8 @@ export const useImageStore = create<ImageStore>()(
             (set) => ({
                 currentImage: null,
 
-                setCurrentImage: async (profileId: string) => {
-                    const result = await getUserImage(profileId);
+                setCurrentImage: async (profileId, token) => {
+                    const result = await useRetreiveImage(profileId, token);
                     set({currentImage: result})
                 }
             }),

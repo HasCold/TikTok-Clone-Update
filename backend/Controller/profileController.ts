@@ -78,11 +78,11 @@ export const useGetProfileByUserId = asyncErrorHandler( async (req: Request, res
         
         if(req.method !== "GET") return errorHandler(res, 400, "Only GET method is allowed");
         
-        const userId = req.query.userId;   
+        const profileId = req.query.profileId;   
         
-        if(!userId) return errorHandler(res, 401, "ID is missing");
+        if(!profileId) return errorHandler(res, 401, "ID is missing");
         
-        const getProfile = await profileModel.findOne({user_id: {$eq: userId}}, {__v: 0});
+        const getProfile = await profileModel.findOne({_id: {$eq: profileId}}, {__v: 0});
         
         res.status(200).json({
             success: true,
