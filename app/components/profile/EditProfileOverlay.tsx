@@ -67,7 +67,7 @@ const updateUserInfo = async () => {
     try {
         setIsUpdating(true);
         await useUpdateProfile(currentProfile?._id || "", userName, userBio, token);
-        setCurrentProfile(user?.user_id, token);
+        setCurrentProfile(user?._id, token);
         setIsEditProfileOpen(false);
         toast.success("Update successfully!")
         router.refresh();
@@ -109,7 +109,7 @@ const cropAndUpdateImage = async () => {
 
         await contextUser?.checkUser();
 
-        setCurrentProfile(user?.user_id, token);
+        setCurrentProfile(user?._id, token);
         setIsEditProfileOpen(false);
         setIsUpdating(false);
         toast.success("Image Update successfully!")

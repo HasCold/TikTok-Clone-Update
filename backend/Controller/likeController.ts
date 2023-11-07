@@ -62,8 +62,8 @@ export const useDeleteLike = asyncErrorHandler(async (req: Request, res: Respons
     try {
         if(req.method !== "DELETE") return errorHandler(res, 500, "Only DELETE method is allowed");
 
-        const {likeId} = req.body
-        if(!likeId) return errorHandler(res, 400, "like not found");
+        const {likeId} = req.query
+        if(!likeId) return errorHandler(res, 400, "like id is found");
 
         await Likes.findByIdAndDelete({_id: likeId});
         res.status(200).json({

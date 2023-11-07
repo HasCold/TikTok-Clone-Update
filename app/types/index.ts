@@ -1,13 +1,12 @@
 export type User = {
-    user_id?: string;
+    _id?: string;  // Profile Model id
+    user_id?: string;  // User Model id
     name?: string;
     bio?: string;
     image?: string;
 }
 
-export type Profile = User & {
-    _id?: string;
-}
+export type Profile = User 
 
 export type LoggedUser = {
     _id?: string | null;

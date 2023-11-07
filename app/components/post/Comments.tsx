@@ -1,4 +1,4 @@
-import React, {useState} from 'react'
+import React, {Suspense, useEffect, useState} from 'react'
 import ClientOnly from '@/app/components/ClientOnly';
 import SingleComment from './SingleComment';
 import { BiLoaderCircle } from 'react-icons/bi';
@@ -19,7 +19,7 @@ const Comments: React.FC<CommmentsProps> = ({params}) => {
 
     let {commentsByPost, setCommentsByPost } = useCommentStore();
     let {setIsLoginOpen, user, token} = useGeneralStore();
-    let {currentProfile} = useProfileStore();
+    let {currentProfile, setCurrentProfile} = useProfileStore();
 
     const [comment, setComment] = useState<string>('');
     const [inputFocused, setInputFocused] = useState<boolean>(false);
@@ -48,7 +48,7 @@ const addComment = async () => {
     try {
         setIsUploading(true);
 
-        await useCreateComment(currentProfile?._id, params?.postId, comment, token);
+        await useCreateComment(user._id, params?.postId, comment, token);
         setComment("");
         setCommentsByPost(params?.postId, token);
         setIsUploading(false);
@@ -74,9 +74,11 @@ const addComment = async () => {
             <div className='text-center mt-6 text-xl text-gray-500 '>No comments...</div>
         ): (
             <div>
+                <Suspense fallback={<p className='text-center'>Comments Load...</p>}>
                 {commentsByPost.map((comment, index) => (
                     <SingleComment key={index} comment={comment} params={params} />
-                ))}
+                    ))}
+                </Suspense>
             </div>
         )}
         </ClientOnly>

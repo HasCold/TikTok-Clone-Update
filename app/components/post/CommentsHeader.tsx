@@ -68,7 +68,7 @@ const CommentsHeader: React.FC<CommentHeaderProps> = ({post, params}) => {
         return;
       }
 
-      let res = useIsLiked(params.profileId, params.postId, likesByPost);  // In res we will get true or false
+      let res = useIsLiked(user._id, params.postId, likesByPost);  // In res we will get true or false
       setUserLiked(res ? true : false);
   }
 
@@ -77,7 +77,7 @@ const CommentsHeader: React.FC<CommentHeaderProps> = ({post, params}) => {
       setHasClickedLike(true);
       
       toast.promise(
-        useCreateLike(params?.profileId || "", params?.postId, token),
+        useCreateLike(user?._id, params?.postId, token),
         {
           loading: 'Loading...',
           success: <b>Like Success!</b>,
@@ -118,13 +118,13 @@ const CommentsHeader: React.FC<CommentHeaderProps> = ({post, params}) => {
   const likeOrUnlike = () => {
     if(!user) return setIsLoginOpen(true);
 
-    let res = useIsLiked(params.profileId, params.postId, likesByPost);  // In res we will get either true or false;
+    let res = useIsLiked(user?._id, params.postId, likesByPost);  // In res we will get either true or false;
 
     if(!res){  // NOT True 
       like();  // That means there is no like;
     }else{
       likesByPost.forEach(like => {  // This means that will true we will unlike it
-        if(user?.user_id && params.profileId === like.profile_id && like.post_id === params.postId){
+        if(user?.user_id && user._id === like.profile_id && like.post_id === params.postId){
             unlike(like._id)
         }
       })

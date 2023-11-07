@@ -79,8 +79,8 @@ interface UploadError {
       setIsUploading(true);
     
       try {
-          await useCreatePost(file, currentProfile?._id, caption, token);
-          router.push(`/profile/${currentProfile?._id}`)
+          await useCreatePost(file, user?._id, caption, token);
+          router.push(`/profile/${user?._id}`)
           setIsUploading(false);
       } catch (error) {
         console.warn(error);

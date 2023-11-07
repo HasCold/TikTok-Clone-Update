@@ -87,13 +87,13 @@ const PostMainLikes: React.FC<PostProfileProps> = (
       return;
     }
 
-    let res = useIsLiked(user?.user_id, post?._id, likes);
+    let res = useIsLiked(user?._id, post?._id, likes);
     setUserLiked(res ? true : false);
   }
 
   const like = async () => {
     setHasClickedLike(true)
-    await useCreateLike(user?.user_id || '', post?._id, token);
+    await useCreateLike(user?._id, post?._id, token);
     await getAllLikesByPost()
     hasUserLikesPost()
     setHasClickedLike(false)
@@ -108,17 +108,17 @@ const unlike = async (id: string) => {
 }
 
 const likeOrUnlike = () => {
-    if (!user?.user_id) {
+    if (!user) {
         setIsLoginOpen(true)
         return
     }
-    let res = useIsLiked(user?.user_id, post?._id, likes)
+    let res = useIsLiked(user?._id, post?._id, likes)
 
     if (!res) {
         like()
     } else {
         likes.forEach((like: Like) => {
-            if (post.profile_id._id === like?.profile_id && like?.post_id === post?._id) {
+            if (user?._id === like?.profile_id && like?.post_id === post?._id) {
                 unlike(like?._id) 
             }
         })

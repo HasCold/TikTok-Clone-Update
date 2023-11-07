@@ -29,4 +29,11 @@ const storage = multer.diskStorage({
     }
 });
 
-module.exports = multer({ storage });
+const maxSize = 524288000; // 500MB in bytes  (1 MB = 1024 * 1024 bytes)  500 * 1024 * 1024 = 524288000 bytes
+
+const uploadVideoMiddleware = multer({
+    storage,
+    limits: { fileSize: maxSize }
+});
+
+module.exports = uploadVideoMiddleware

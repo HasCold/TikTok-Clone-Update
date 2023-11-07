@@ -6,7 +6,7 @@ import { CommentWithProfile } from '@/app/types';
 import moment from 'moment';
 import Link from 'next/link';
 import React from 'react'
-import {useState} from 'react';
+import {useState, useEffect} from 'react';
 import toast from 'react-hot-toast';
 import { BiLoaderCircle } from 'react-icons/bi';
 import { BsTrash3 } from 'react-icons/bs';
@@ -23,6 +23,10 @@ const SingleComment: React.FC<SingleCommentProps> = ({comment, params}) => {
     const {user, token} = useGeneralStore();
     const [isDeleting, setIsDeleting] = useState<boolean>(false);
 
+    useEffect(() => {
+        setCommentsByPost(params?.postId, token)
+    }, [])
+
     const deleteThisComment = async () => {
         let res = confirm("Are you sure ! you want to delete this comment"); // window.confirm() instructs the browser to display a dialog with an optional message, and to wait until the user either confirms or cancels the dialog.
         if(!res) return
@@ -38,16 +42,16 @@ const SingleComment: React.FC<SingleCommentProps> = ({comment, params}) => {
             toast.error("Could not delete comment");
         }
     }
-  
+    
     return (
-    <>
+        <>
      <div id="SingleComment" className="flex items-center justify-between px-8 mt-4">
         <div className="flex items-center relative w-full">
-            <Link href={`/profile/${comment.profile_id._id}`}>
+            <Link href={`/profile/${comment?.profile_id?._id}`}>
                 <img 
                     className="absolute top-0 rounded-full lg:mx-0 mx-auto" 
                     width="40" 
-                    src={comment.profile_id.image}
+                    src={comment?.profile_id?.image}
                 />
             </Link>
             <div className='ml-14 pt-0.5 w-full'>
@@ -59,7 +63,7 @@ const SingleComment: React.FC<SingleCommentProps> = ({comment, params}) => {
                     </span>
                 </span>
 
-                {user?.user_id === comment.profile_id.user_id ? (
+                {user?.user_id == comment.profile_id?.user_id ? (
                     <button 
                     disabled={isDeleting}
                     onClick={() => deleteThisComment()}

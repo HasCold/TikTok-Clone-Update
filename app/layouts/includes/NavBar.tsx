@@ -119,8 +119,7 @@ const NavBar = () => {
                     <div className="absolute bg-white rounded-lg py-1.5 w-[200px] shadow-xl border top-[40px] right-0">
                         <button
                         onClick={() => {
-                            setCurrentProfile(user?.user_id, token)
-                            router.push(`/profile/${user?.user_id}`)
+                            router.push(`/profile/${user?._id}`)
                             setShowMenu(false)
                         }}
                         className="flex items-center w-full justify-start py-3 px-2 hover:bg-gray-100 cursor-pointer"

@@ -1,6 +1,6 @@
 import { Like } from "../types";
 
-const useIsLiked = (profileId: string, postId: string | undefined, likes: Array<Like>) => {
+const useIsLiked = (profileId: string | undefined, postId: string | undefined, likes: Array<Like>) => {
 
   let res: Like[] = [];
 

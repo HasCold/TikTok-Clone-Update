@@ -3,12 +3,11 @@ const useDeleteLike = async (likeId: string, token: string | null) => {
   
   try {
 
-    const res = await fetch("/api/like/deleteLike", {
+    const res = await fetch("/api/like/deleteLike?likeId="+likeId, {
         method: "DELETE",
         headers: {
             "Authorization": `Bearer ${token}`
         },
-        body: JSON.stringify({likeId})
     });
 
     const data = await res.json();

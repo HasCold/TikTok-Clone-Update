@@ -1,17 +1,17 @@
 'use client'
 
 import { useRouter } from 'next/navigation';
-import React, { useEffect } from 'react'
+import React, { Suspense, useEffect, useMemo } from 'react'
 import Link from 'next/link';
 import { AiOutlineClose } from 'react-icons/ai';
 import { BiChevronDown, BiChevronUp } from 'react-icons/bi';
 import ClientOnly from '@/app/components/ClientOnly';
-import CommentsHeader from '@/app/components/post/CommentsHeader';
-import Comments from '../../../components/post/Comments';
 import { usePostStore } from '@/app/stores/post';
 import { useLikeStore } from '@/app/stores/like';
 import { useCommentStore } from '@/app/stores/comment';
 import { useGeneralStore } from '@/app/stores/general';
+import CommentsHeader from '@/app/components/post/CommentsHeader';
+import Comments from '../../../components/post/Comments';
 
 type PostPageTypes = {
     profileId: string;
@@ -24,7 +24,7 @@ interface ParamType {
 
 const page: React.FC<ParamType> = ({params}) => {
 const router = useRouter();  
- 
+
 const {token} = useGeneralStore();
 let {postById, postsByUser, setPostById, setPostsByUser} = usePostStore();
 let {setLikesByPost} = useLikeStore();
@@ -136,9 +136,11 @@ const loopThroughPostsDown = () => {
     >
         <div className='py-7'>
             <ClientOnly>
+                <Suspense fallback={<p className='text-center'>Loading...</p>}>
                 {postById?.originalName ? (
-                    <CommentsHeader post={postById} params={params}/>
-                ) : null}
+                <CommentsHeader post={postById} params={params}/>
+                ) : null }
+                </Suspense>
             </ClientOnly>
 
             <Comments params={params} />

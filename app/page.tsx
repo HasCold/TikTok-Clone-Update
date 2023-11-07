@@ -20,7 +20,7 @@ export default function Home() {
     return allPosts.map((post, index) => (
       <PostMain post={post} key={index} />
     ));
-  }, [allPosts]);
+  }, [allPosts, setPostsByUser]);
 
   return (
     <>

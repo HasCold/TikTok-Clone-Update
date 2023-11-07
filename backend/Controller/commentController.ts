@@ -11,9 +11,6 @@ export const createComment = asyncErrorHandler(async (req: Request, res: Respons
         const postId = req.query.postId;
         const {comment} = req.body;
 
-        console.log(profileId);
-        console.log(postId);
-
         if(!postId || !profileId) return errorHandler(res, 404, "Id not Found");
         if(!comment) return errorHandler(res, 400, "Please also do the comment");
 
@@ -43,7 +40,7 @@ export const getCommentsByPostId = asyncErrorHandler(async (req: Request, res: R
         const {postId} = req.params;
         if(!postId) return errorHandler(res, 400, "Post doesn't exist");
         
-        const getPostById = await Comment.find({post_id: {$eq: postId}}).populate({
+        const getPostById = await Comment.find({post_id: postId}).populate({
             path: "profile_id",
             select: "user_id name image"
         });

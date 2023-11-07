@@ -26,8 +26,8 @@ const getUserByID = async ({
         });
 
         const data = await res.json();
-        const {user_id, image, bio, name} = data.getProfile;
-        setUser({user_id, image, bio, name});
+        const {user_id, image, bio, name, _id} = data.getProfile;
+        setUser({user_id, image, bio, name, _id});
 
     } catch (error: any) {
         setUser(null);

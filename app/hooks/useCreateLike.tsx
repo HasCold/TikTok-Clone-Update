@@ -1,5 +1,5 @@
 
-const useCreateLike = async (profileId: string, postId: string | undefined, token: string | null) => {
+const useCreateLike = async (profileId: string | undefined, postId: string | undefined, token: string | null) => {
 
   try {
 

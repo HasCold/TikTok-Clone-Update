@@ -27,11 +27,7 @@ const Profile: React.FC<ProfilePageProps> = ({params}) => {
     setCurrentProfile(params?.id, token)
     setPostsByUser(params?.id, token);
     setCurrentImage(params?.id, token);
-}, []);
-
-  useEffect(() => {    
-    setCurrentImage(params?.id, token)
-  }, [currentProfile]); 
+}, [setCurrentImage, setCurrentProfile]);
 
 // import PostUser from '@/app/components/profile/PostUser'
 const PostUser = useMemo(() => dynamic(() => import("@/app/components/profile/PostUser"), {ssr: false}), [postsByUser, setPostsByUser])
@@ -51,7 +47,7 @@ const MemoizedPostByUserComponent = useMemo(() => {
     <div className="pt-[90px] ml-[90px] 2xl:pl-[185px] lg:pl-[160px] lg:pr-0 w-[calc(100%-90px)] pr-3 max-w-[1800px] 2xl:mx-auto">
       <div className='flex w-[calc(100vw-230px)]'>
         <ClientOnly>
-          {currentProfile ? (
+          {currentImage ? (
             <img className='w-[120px] h-[120px] min-w-[120px] rounded-full' src={`${process.env.IMAGES_PORT_URL}/${currentImage?.fileName}`} alt="logo" />
           ) : (
             <div className="min-w-[150px] h-[120px] bg-gray-200 rounded-full" />
@@ -70,7 +66,7 @@ const MemoizedPostByUserComponent = useMemo(() => {
               )}
             </ClientOnly>
         
-        {user?.user_id === currentProfile?.user_id ? (
+        {user?._id === params?.id ? (
           <button 
           onClick={() => setIsEditProfileOpen(isEditProfileOpen = !isEditProfileOpen)}
           className='flex item-center rounded-md py-1.5 px-3.5 mt-3 text-[15px] font-semibold border hover:bg-gray-100'
@@ -80,7 +76,7 @@ const MemoizedPostByUserComponent = useMemo(() => {
           </button>
         ) : (
           <button
-          className='flex item-center rounded-md py-1.5 px-8 mt-3 text-[15px] text-white font-semibold bg-[#F02C56]'
+          className='flex item-center rounded-md py-1.5 px-8 mt-3 text-[15px] text-white sm font-semibold bg-[#F02C56]'
           >
             Follow
           </button>
