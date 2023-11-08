@@ -7,6 +7,7 @@ const userSchema = new Schema({
     image: {type: String, required: true, default: "https://upload.wikimedia.org/wikipedia/commons/8/89/Portrait_Placeholder.png"},
     password: {type: String, required: true, select: false},
     confirmPassword: {type: String, required: true},
+    resetToken: {type: String}
 },{
     timestamps: true,
     strict: true, // This will throw an error for extra fields

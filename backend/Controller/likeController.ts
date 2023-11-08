@@ -78,4 +78,44 @@ export const useDeleteLike = asyncErrorHandler(async (req: Request, res: Respons
             message: "Like couldn't be deleted"
         });
     }
+});
+
+
+// User Liked Post
+export const useGetUserLikedPost = asyncErrorHandler(async (req: Request, res: Response) => {
+    try {
+        if(req.method !== "GET") return errorHandler(res, 500, "Only GET method is allowed");
+
+        const {profileId} = req.params;
+
+        if(!profileId) return errorHandler(res, 400, "profile ID is missing");
+
+        // const userLikePost = await Likes.aggregate([{$unwind: "$profile_id"}, {$match: {profile_id: {$eq: profileId}}}, 
+        // {$group: {_id: "$profile_id", 
+        //  allLikedPostArray: {$addToSet: "$post_id"} 
+        // }},
+        // {$sort: {allLikedPostArray: -1}}
+        // ]).populate({
+        //     path: "allLikedPostArray",
+        //     select: "fileName"
+        //  })
+          
+        const userLikePost = await Likes.find({profile_id: {$eq: profileId}}, {_id:0, profile_id: 1, post_id: 1}).populate({
+            path: "post_id",
+            select: "fileName text filePath"
+        });
+
+        res.status(201).json({
+            success: true,
+            userLikePost
+        })
+
+    } catch (error) {
+        console.log(error);
+        res.status(501).json({
+            success: false,
+            message: "Like couldn't be found",
+            error: error
+        })   
+    }
 })

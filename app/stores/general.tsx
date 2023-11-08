@@ -11,6 +11,8 @@ interface GeneralStore{
     user: User | null ,
     loggedUser: LoggedUser | null,
     token: string | null,
+    isForgetPassword: boolean,
+    setIsForgetPassword: (val: boolean) => void,
     setUser: (val: User | null) => void,
     setIsLoginOpen: (val: boolean) => void,
     setIsEditProfileOpen: (val: boolean) => void,
@@ -29,7 +31,9 @@ export const useGeneralStore = create<GeneralStore>()(
                 user: null,
                 loggedUser: null,
                 token: null,
+                isForgetPassword: false,
 
+                setIsForgetPassword: (val: boolean) => set({isForgetPassword: val}),
                 setIsLoginOpen: (val: boolean) => set({isLoginOpen: val}),
                 setIsEditProfileOpen: (val: boolean) => set({isEditProfileOpen: val}),
                 setRandomUsers: async (val: string | null) => {

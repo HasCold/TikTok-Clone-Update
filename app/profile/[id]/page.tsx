@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useEffect, useMemo } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import MainLayout from '@/app/layouts/MainLayout'
 import ClientOnly from '@/app/components/ClientOnly'
 import { BsPencil } from 'react-icons/bs'
@@ -10,6 +10,8 @@ import { useProfileStore } from '@/app/stores/profile'
 import { useGeneralStore } from '@/app/stores/general'
 import { useImageStore } from '@/app/stores/image'
 import dynamic from 'next/dynamic'
+import { useLikeStore } from '@/app/stores/like'
+import LikeVideo from '@/app/components/profile/LikeVideo'
 
 interface ProfilePageProps {
   params: {id: string}
@@ -21,17 +23,23 @@ const Profile: React.FC<ProfilePageProps> = ({params}) => {
   let {setCurrentProfile, currentProfile} = useProfileStore();
   let {isEditProfileOpen, setIsEditProfileOpen, user, token} = useGeneralStore();
   let {setCurrentImage, currentImage} = useImageStore(); 
+  let [isLikeVideo, setIsLikeVideo] = useState<Boolean>(false);
+  let {setUserLikedPost, likesByPost, userLikedPost} = useLikeStore();
 
   useEffect(() => {
     // setCurrentProfile(user?.user_id, token);
     setCurrentProfile(params?.id, token)
     setPostsByUser(params?.id, token);
     setCurrentImage(params?.id, token);
-}, [setCurrentImage, setCurrentProfile]);
-
-// import PostUser from '@/app/components/profile/PostUser'
-const PostUser = useMemo(() => dynamic(() => import("@/app/components/profile/PostUser"), {ssr: false}), [postsByUser, setPostsByUser])
-
+  }, [setCurrentImage, setCurrentProfile]);
+  
+  useEffect(() => {
+    setUserLikedPost(params.id, token);
+  }, [likesByPost, params.id])
+  
+  // import PostUser from '@/app/components/profile/PostUser'
+  const PostUser = useMemo(() => dynamic(() => import("@/app/components/profile/PostUser"), {ssr: false}), [postsByUser, setPostsByUser]);
+    
 const MemoizedPostByUserComponent = useMemo(() => {
   return Array.isArray(postsByUser) ? (  // Array.isArray()  --> Return boolean   
   postsByUser.map((post, index) => (
@@ -39,6 +47,14 @@ const MemoizedPostByUserComponent = useMemo(() => {
     ))) : null 
 }, [postsByUser, setPostsByUser, currentProfile]);
 
+
+  const MemoizedPostLikesByUser = useMemo(() => {
+    return Array.isArray(userLikedPost) ? (
+      userLikedPost.map((post, index) => (
+        <LikeVideo post={post} key={index}/>
+        ))
+    ) : null
+  }, [params.id, likesByPost]);
 
   return (    
     <>
@@ -102,14 +118,25 @@ const MemoizedPostByUserComponent = useMemo(() => {
       </ClientOnly>
 
       <ul className="w-full flex items-center pt-4 border-b">
-          <li className="w-60 text-center py-2 text-[17px] font-semibold border-b-2 border-b-black">Videos</li>
-          <li className="w-60 text-gray-500 text-center py-2 text-[17px] font-semibold">Liked</li>
+          <li
+          onClick={() => setIsLikeVideo(false)}  
+          className={`w-60 text-center cursor-pointer py-2 text-[17px] font-semibold transition-all ${!isLikeVideo ? 'border-b-black border-b-2 ' : 'text-gray-500'}`}>Videos</li>
+
+          <li
+          onClick={() => setIsLikeVideo(true)} 
+          className={`w-60 text-center py-2 text-[17px] font-semibold cursor-pointer transition-all ${isLikeVideo ? 'border-b-black border-b-2' : 'text-gray-500'}`}>Liked</li>
       </ul>
 
       <ClientOnly>
+        {isLikeVideo ?
         <div className='mt-4 grid 2xl:grid-cols-6 xl:grid-cols-5 lg:grid-cols-4 md:grid-cols-3 grid-cols-2 gap-3'>
-        {MemoizedPostByUserComponent}
-            </div>
+        {MemoizedPostLikesByUser} 
+        </div> 
+        :
+        <div className='mt-4 grid 2xl:grid-cols-6 xl:grid-cols-5 lg:grid-cols-4 md:grid-cols-3 grid-cols-2 gap-3'>
+         {MemoizedPostByUserComponent}
+          </div>
+         }
             </ClientOnly>
             
             </div>

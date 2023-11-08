@@ -1,8 +1,9 @@
 import { Schema, model } from "mongoose";
+const mongoose = require ("mongoose");
 
 const likeSchema = new Schema({
-    profile_id: {type: String, required: true},
-    post_id: {type: String, required: true},
+    profile_id: {type: mongoose.Schema.Types.ObjectId, ref: "Profile" ,required: true},
+    post_id: {type: mongoose.Schema.Types.ObjectId, ref: "Post", required: true},
     likedUser: {type: Boolean, required: true, default: false}
 }, {
     strict: true  // This will throw an error for extra fields

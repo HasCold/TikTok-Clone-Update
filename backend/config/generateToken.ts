@@ -9,4 +9,11 @@ dotenv.config();
     })
 }
 
-module.exports = generateToken;
+const resetPasswordToken = (id: string, expiry: string) => {
+    return jwt.sign({id}, process.env.JWT_SECRET_KEY, {
+        expiresIn: expiry
+    })
+}
+
+
+module.exports = generateToken, resetPasswordToken;

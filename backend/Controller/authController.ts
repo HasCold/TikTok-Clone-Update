@@ -1,8 +1,11 @@
 import { NextFunction, Request, Response } from "express";
 import { asyncErrorHandler, errorHandler } from "../middleware/errorHandler";
+import { Error } from "mongoose";
 const UserModel = require ("../models/authModel");
 const generateToken = require("../config/generateToken");
 const CryptoJS = require ("crypto-js");
+const resetPasswordToken = require('../config/generateToken')
+const transporter = require("../utils/emailFeature")
 
 export const registerUser = asyncErrorHandler(async (req: Request, res: Response, next: NextFunction) => {
     // For hashing the password we are using the crypto-js and currently using the cipher (AES)
@@ -90,5 +93,54 @@ export const loginUser = asyncErrorHandler(async (req: Request, res: Response, n
     }catch{
         res.status(401);
         throw new Error("Invalid Credentials !");      
+    }
+});
+
+
+// Send link to email for reset password
+export const sendPasswordLink = asyncErrorHandler(async (req: Request, res: Response) => {
+    try {
+        const {email} = req.body;
+        if(!email) return errorHandler(res, 400, "Enter email address")
+
+        const userEmail = await UserModel.findOne({email: email});
+        if(!userEmail) return errorHandler(res, 404, "This user doesn't exist");
+
+        const token = resetPasswordToken(userEmail._id, "1d");
+
+        const setUserToken = await UserModel.findByIdAndUpdate({_id: userEmail._id}, {resetToken: token},{new: true}).select("-confirmPassword");
+
+        if(setUserToken){
+            const mailOptions = {
+                from: process.env.ADMIN_EMAIL,
+                to: email,
+                subject: "Sending email for reset password",
+                text: `This Link Valid Only For 2 Minutes ${process.env.CLIENT_PORT}/resetpassword/${userEmail._id}/${setUserToken.resetToken}`
+            }
+
+            transporter.sendMail(mailOptions, (error: Error, info: any) => {
+                if(error){
+                    console.log("error", error);
+                    res.status(401).json({
+                        success: false,
+                        message: "Email not send"
+                    })
+                }else{
+                    console.log("Email sent", info.response);
+                    res.status(201).json({
+                        success: true,
+                        message: "Email sent successfully!"
+                    })
+                }
+            })
+        }
+
+
+    } catch (error) {
+        res.status(501).json({
+            success: false,
+           message: "Password Link couldn't send",
+           error: error
+        })
     }
 });

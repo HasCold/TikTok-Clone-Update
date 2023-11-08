@@ -42,11 +42,20 @@ export type PostWithProfile = Omit<Post, "profile_id"> & {
 }
 
 export interface Like {
-    _id: string;
-    profile_id: string;
+    _id?: string;
+    profile_id?: string;
     post_id: string;
     likedUser: boolean;
   }
+
+export type userLikedPost = Pick<Like, "_id" | "profile_id"> & {
+    post_id: {
+        _id: string;
+        fileName: string;
+        filePath: string;
+        text: string;
+    }
+} 
 
 export type CommentWithProfile = {
     _id: string;

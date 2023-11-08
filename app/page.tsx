@@ -14,7 +14,7 @@ export default function Home() {
   }, []);
   
   // import PostMain from "./components/PostMain";
-  const PostMain = useMemo(() => dynamic(() => import("./components/PostMain"), {ssr: false}), []); 
+  const PostMain = dynamic(() => import("./components/PostMain"), {ssr: false}); 
 
   const MemoizedPostMainComponents = useMemo(() => {
     return allPosts.map((post, index) => (
