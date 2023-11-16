@@ -19,7 +19,7 @@ const ForgotPassword = () => {
     const [email, setEmail] = useState<string | ''>('');
     const [error, setError] = useState<showErrorObject | null>(null);
     const [message, setMessage] = useState<boolean>(false);
-    let {setIsForgetPassword, isForgetPassword} = useGeneralStore();
+    let {setIsForgetPassword, isForgetPassword, setIsLoginOpen} = useGeneralStore();
     const contextUser = useUser();
 
     const showError = (type: string) => {
@@ -62,6 +62,11 @@ const ForgotPassword = () => {
                 setEmail("");
                 setMessage(true);
                 toast.success("Password reset link has been sent")
+
+                setTimeout(() => {
+                    setIsLoginOpen(false);
+                    setIsForgetPassword(false);
+                }, 60000);  // 60,000 miliseconds = 60 seconds = 1 min 
             }else{
                 toast.error(data.message)
             }

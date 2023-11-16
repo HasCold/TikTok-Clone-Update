@@ -1,4 +1,4 @@
-import express from "express";
+import express, { NextFunction, Request, Response } from "express";
 import dotenv from "dotenv";
 import colors from "colors";
 import connectDB from './config/db';
@@ -17,6 +17,18 @@ connectDB();
 const PORT = process.env.PORT || 5000;
 
 app.use(express.json()); // Server to accept the json data from frontend
+
+app.use((req: Request, res: Response, next: NextFunction) => {
+  // Replace 'http://localhost:3000' with the actual origin of your client application
+  res.header('Access-Control-Allow-Origin', 'http://localhost:3000');
+  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
+  res.header('Access-Control-Allow-Headers', 'Content-Type');
+  res.header('Cross-Origin-Resource-Policy', 'cross-origin');
+  res.header('Access-Control-Allow-Credentials', 'true');
+// Continue to the next middleware
+  next();
+})
+
 app.use(cors({
     origin: "http://localhost:3000", // Replace with your frontend URL
     credentials: true, // You may need this depending on your use case

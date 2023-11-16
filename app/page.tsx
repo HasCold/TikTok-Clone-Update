@@ -4,7 +4,7 @@ import MainLayout from "./layouts/MainLayout";
 import ClientOnly from "./components/ClientOnly";
 import { usePostStore } from "./stores/post";
 import { useEffect, useMemo } from "react";
-import dynamic from "next/dynamic";
+import PostMain from "./components/PostMain";
 
 export default function Home() {
   let {allPosts, setAllPosts, setPostsByUser, postsByUser} = usePostStore();
@@ -12,9 +12,6 @@ export default function Home() {
   useEffect(() => {
     setAllPosts()
   }, []);
-  
-  // import PostMain from "./components/PostMain";
-  const PostMain = dynamic(() => import("./components/PostMain"), {ssr: false}); 
 
   const MemoizedPostMainComponents = useMemo(() => {
     return allPosts.map((post, index) => (

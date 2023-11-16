@@ -82,7 +82,7 @@ const PostMain: React.FC<PostProfileProps> = (
             controls
             muted
             className="rounded-xl object-cover mx-auto h-full" 
-            src={`${process.env.SERVER_POST_URL}/${post.fileName}`}
+            src={`${process.env.SERVER_POST_URL}/${post.fileName}` || post.profile_id.image}
             />
             <img 
             className="absolute right-2 bottom-10" 
