@@ -30,9 +30,13 @@ const ForgotPassword = () => {
 
     const validate= () => {
         let isError = false;
+        const regExp =  /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/
 
         if(!email){
             setError({type: "string", message: "An email is required"})
+            isError = true;
+        }else if(!regExp.test(email)){
+            setError({type:"email", message: "Invalid email"});
             isError = true;
         }
 
