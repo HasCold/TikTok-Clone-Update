@@ -100,6 +100,8 @@ export const loginUser = asyncErrorHandler(async (req: Request, res: Response, n
 // Send link to email for reset password
 export const sendPasswordLink = asyncErrorHandler(async (req: Request, res: Response) => {
     try {
+        if(req.method !== "POST") return errorHandler(res, 400, "Only POST method is allowed !");
+
         const {email} = req.body;
         if(!email) return errorHandler(res, 400, "Enter email address")
 
@@ -115,7 +117,7 @@ export const sendPasswordLink = asyncErrorHandler(async (req: Request, res: Resp
                 from: process.env.ADMIN_EMAIL,
                 to: email,
                 subject: "Sending email for reset password",
-                text: `This Link Valid Only For 2 Minutes ${process.env.CLIENT_PORT}/resetpassword/${userEmail._id}/${setUserToken.resetToken}`
+                text: `This Link is Valid Only For 2 Minutes ${process.env.CLIENT_PORT}/resetpassword/${userEmail._id}/${setUserToken.resetToken}`
             }
 
             transporter.sendMail(mailOptions, (error: Error, info: any) => {
@@ -144,3 +146,13 @@ export const sendPasswordLink = asyncErrorHandler(async (req: Request, res: Resp
         })
     }
 });
+
+
+// Validate User to proceed them for resetPassword process 
+export const validateUser = async (req: Request, res: Response) => {
+    try {
+        if(req.method !== "GET") return errorHandler(res, 404, "Only GET method is allowed !");
+    } catch (error) {
+        
+    }
+}

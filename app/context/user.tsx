@@ -112,8 +112,30 @@ const logout = async () => {
     }
 }
 
+const forgotPassword = async (id: string | string[], token: string) => {
+    try {
+        const res = await fetch(`/api/forgotPassword/${id}/${token}`, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json"
+            }
+        });
+
+        const data = await res.json();
+        
+        if(data.status === 201){
+            console.log("User valid");
+        }else{
+            toast.error("Invalid User!");
+            router.push('/')
+        }
+    } catch (error) {
+        console.error(error);
+    }
+}
+
     return(
-        <UserContext.Provider value={{profile, logout, checkUser, login}}>
+        <UserContext.Provider value={{profile, logout, checkUser, login, forgotPassword}}>
             {children}
         </UserContext.Provider>
     )

@@ -7,24 +7,36 @@ import { useGeneralStore } from '@/app/stores/general';
 import React, { useEffect, useState } from 'react'
 import Icon from 'react-icons-kit';
 import { BiLoaderCircle } from 'react-icons/bi';
+import { useParams } from 'next/navigation';
+import { useUser } from '@/app/context/user';
 
 interface showErrorObject {
   type: string;
   message: string;
 }
 
-const page = () => {
+interface ResetPasswordProps {
+  params: {
+    id: string;
+    token: string;
+  }
+}
+
+const resetPassword: React.FC<ResetPasswordProps> = ({params}) => {
 
   const {setIsLoginOpen, setIsForgetPassword} = useGeneralStore();
   const [type, setType] = useState<string>("password");
   const [error, setError] = useState<showErrorObject | null>(null);
   const [password, setPassword] = useState<string | "">("");
   const [icon, setIcon] = useState(eyeOff);
-  const [loading, setLoading] = useState<boolean>(false);
+  const [isloading, setIsLoading] = useState<boolean>(false);
+  const {id, token} = useParams();
+  const contextUser = useUser();
 
   useEffect(() => {
     setIsLoginOpen(false);
     setIsForgetPassword(false);
+    contextUser?.forgotPassword(params.id, params.token);
   }, []);
 
   const showError = (type: string) => {
@@ -44,6 +56,21 @@ const page = () => {
       setIcon(eyeOff);
     }
   }
+
+  const validate = () => {
+    let isError = false;
+
+    if(!password){
+      setError({type: "password", message: "A password is required"});
+      isError = true;
+    }else if(password.length < 6){
+      setError({type: 'password', message: 'The password needs to be longer'})
+      isError = true;
+    }
+
+    return isError;
+  } 
+
   return (
     <>
     <div className='max-w-[1500px] flex justify-center items-center'>
@@ -73,10 +100,10 @@ const page = () => {
         </div>
 
       <button
-      disabled={loading}
+      disabled={isloading}
       className={`bg-blue-900 text-white font-bold w-[calc(100%-32px)] flex justify-center items-center mt-3 rounded-md py-3 ${password ? 'hover:bg-blue-700' : ""}`}
       >
-      {loading ? <BiLoaderCircle className="animate-spin" color="#ffffff" size={25} /> : 'Send'}
+      {isloading ? <BiLoaderCircle className="animate-spin" color="#ffffff" size={25} /> : 'Send'}
       </button>
       
       </div>
@@ -88,4 +115,4 @@ const page = () => {
   )
 }
 
-export default page;
+export default resetPassword;

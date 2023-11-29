@@ -18,7 +18,8 @@ export interface UserContextTypes {
     profile: (_id: string, name: string, image: string | undefined) => Promise<void>; 
     logout: () => void;
     login: (email: string, password: string) => void;
-    checkUser: () => Promise<void>
+    checkUser: () => Promise<void>;
+    forgotPassword: (id: string, token: string) => void;
 }
 
 export type RandomUsers = Omit<Profile, "bio">
