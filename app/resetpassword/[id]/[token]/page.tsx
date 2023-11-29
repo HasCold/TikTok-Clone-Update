@@ -7,7 +7,7 @@ import { useGeneralStore } from '@/app/stores/general';
 import React, { useEffect, useState } from 'react'
 import Icon from 'react-icons-kit';
 import { BiLoaderCircle } from 'react-icons/bi';
-import { useParams } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 import { useUser } from '@/app/context/user';
 
 interface showErrorObject {
@@ -22,6 +22,11 @@ interface ResetPasswordProps {
   }
 }
 
+type userParams = {
+  id: string;
+  token: string;
+}
+
 const resetPassword: React.FC<ResetPasswordProps> = ({params}) => {
 
   const {setIsLoginOpen, setIsForgetPassword} = useGeneralStore();
@@ -30,13 +35,14 @@ const resetPassword: React.FC<ResetPasswordProps> = ({params}) => {
   const [password, setPassword] = useState<string | "">("");
   const [icon, setIcon] = useState(eyeOff);
   const [isloading, setIsLoading] = useState<boolean>(false);
-  const {id, token} = useParams();
+  const [message, setMessage] = useState<boolean>(false);
+  const {id, token} = useParams() as userParams;
   const contextUser = useUser();
 
   useEffect(() => {
     setIsLoginOpen(false);
     setIsForgetPassword(false);
-    contextUser?.forgotPassword(params.id, params.token);
+    contextUser?.userValid(params.id, params.token);
   }, []);
 
   const showError = (type: string) => {
@@ -71,6 +77,26 @@ const resetPassword: React.FC<ResetPasswordProps> = ({params}) => {
     return isError;
   } 
 
+  const resetPassword = async (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+    e.preventDefault();
+
+    let isError = validate();
+    if(isError) return
+    if(!contextUser) return
+
+    try {
+      setIsLoading(true);
+      if(params.id === id && params.token === token){
+        await contextUser.resetPassword(id, token, password, setPassword, setMessage);
+      }
+      setIsLoading(false);
+    } catch (error) {
+      console.error(error);
+    }
+
+
+  }
+
   return (
     <>
     <div className='max-w-[1500px] flex justify-center items-center'>
@@ -86,6 +112,9 @@ const resetPassword: React.FC<ResetPasswordProps> = ({params}) => {
         className='font-semibold text-[18px]'
         >
         New Password</label>
+
+        {message ? <p className='text-green-700 font-semibold text-center py-2 pb-2'>Password Updated Successfully !</p> : ""}
+
         <div className='flex mt-2'>
         <TextInput
         placeholder='Enter password'
@@ -100,6 +129,7 @@ const resetPassword: React.FC<ResetPasswordProps> = ({params}) => {
         </div>
 
       <button
+      onClick={(e) => resetPassword(e)}
       disabled={isloading}
       className={`bg-blue-900 text-white font-bold w-[calc(100%-32px)] flex justify-center items-center mt-3 rounded-md py-3 ${password ? 'hover:bg-blue-700' : ""}`}
       >

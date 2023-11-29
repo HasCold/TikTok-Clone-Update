@@ -112,9 +112,9 @@ const logout = async () => {
     }
 }
 
-const forgotPassword = async (id: string | string[], token: string) => {
+const userValid = async (id: string, token: string) => {
     try {
-        const res = await fetch(`/api/forgotPassword/${id}/${token}`, {
+        const res = await fetch(`/api/auth/forgotPassword/${id}/${token}`, {
             method: "GET",
             headers: {
                 "Content-Type": "application/json"
@@ -123,7 +123,7 @@ const forgotPassword = async (id: string | string[], token: string) => {
 
         const data = await res.json();
         
-        if(data.status === 201){
+        if(data.status == 201){
             console.log("User valid");
         }else{
             toast.error("Invalid User!");
@@ -134,8 +134,38 @@ const forgotPassword = async (id: string | string[], token: string) => {
     }
 }
 
+const resetPassword = async (id: string, token: string, password: string, setPassword: Function, setMessage: Function) => {
+    try {
+        const res = await fetch(`/api/auth/resetPassword/${id}/${token}`, {
+            method: "PUT",
+            headers: {
+                'Content-Type': "application/json"
+            },
+            body: JSON.stringify({password})
+        });
+
+        const data = await res.json();
+
+        if(data.success){
+            setPassword("");
+            toast.success(data.message);
+            setMessage(true);
+            setTimeout(() => {
+                router.push("/");
+            }, 3000);  // 3000ms -->> 3 seconds
+        }else{
+            toast.error(data.message);
+            router.push("/")
+        }
+        
+    } catch (error) {
+        toast.error("Failed to update the password !");
+        throw error;
+    }
+}
+
     return(
-        <UserContext.Provider value={{profile, logout, checkUser, login, forgotPassword}}>
+        <UserContext.Provider value={{profile, logout, checkUser, login, userValid, resetPassword}}>
             {children}
         </UserContext.Provider>
     )

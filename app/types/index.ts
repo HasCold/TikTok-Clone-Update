@@ -19,7 +19,8 @@ export interface UserContextTypes {
     logout: () => void;
     login: (email: string, password: string) => void;
     checkUser: () => Promise<void>;
-    forgotPassword: (id: string, token: string) => void;
+    userValid: (id: string, token: string) => void;
+    resetPassword: (id: string, token: string, password: string, setPassword: Function, setMessage: Function) => void;
 }
 
 export type RandomUsers = Omit<Profile, "bio">

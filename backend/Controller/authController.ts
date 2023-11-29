@@ -6,6 +6,7 @@ const generateToken = require("../config/generateToken");
 const CryptoJS = require ("crypto-js");
 const resetPasswordToken = require('../config/generateToken')
 const transporter = require("../utils/emailFeature")
+const jwt = require ("jsonwebtoken");
 
 export const registerUser = asyncErrorHandler(async (req: Request, res: Response, next: NextFunction) => {
     // For hashing the password we are using the crypto-js and currently using the cipher (AES)
@@ -108,7 +109,7 @@ export const sendPasswordLink = asyncErrorHandler(async (req: Request, res: Resp
         const userEmail = await UserModel.findOne({email: email});
         if(!userEmail) return errorHandler(res, 404, "This user doesn't exist");
 
-        const token = resetPasswordToken(userEmail._id, "1d");
+        const token = resetPasswordToken(userEmail._id, "120s");
 
         const setUserToken = await UserModel.findByIdAndUpdate({_id: userEmail._id}, {resetToken: token},{new: true}).select("-confirmPassword");
 
@@ -149,10 +150,81 @@ export const sendPasswordLink = asyncErrorHandler(async (req: Request, res: Resp
 
 
 // Validate User to proceed them for resetPassword process 
-export const validateUser = async (req: Request, res: Response) => {
+export const validateUser = asyncErrorHandler( async (req: Request, res: Response) => {
     try {
-        if(req.method !== "GET") return errorHandler(res, 404, "Only GET method is allowed !");
-    } catch (error) {
+        if(req.method !== "GET") return errorHandler(res, 400, "Only GET method is allowed !");
+        const {id, token} = req.params;
         
+        const validUser = await UserModel.findOne({_id: id, resetToken: token}, {confirmPassword: 0, _id: 0});
+
+        const verifyToken = jwt.verify(validUser.resetToken, process.env.JWT_SECRET_KEY);
+
+        if(validUser && verifyToken.id){
+            res.status(201).json({
+                status: 201,
+                success: true,
+                validUser
+            })
+        }else{
+            res.status(401).json({
+                success: false,
+                message: "User not exist"
+            });
+        }
+
+    } catch (error) {
+        console.error(error);
+        res.status(501).json({
+            success: false,
+            message: "User is not valid for reseting the password"
+        })
     }
-}
+});
+
+
+// Change the Password
+export const resetPassword = asyncErrorHandler( async (req: Request, res: Response) => {
+    try {
+        if(req.method !== "PUT") return errorHandler(res, 400, "Only PUT method is allowed !");
+
+        const {id, token} = req.params;
+        const {password} = req.body;
+        if(!id || !token || !password) return errorHandler(res, 404, "Something is missing");
+
+        const validUser = await UserModel.findOne({_id: id, resetToken: token}, {confirmPassword: 0, _id: 0});
+        const verifyToken = jwt.verify(validUser.resetToken, process.env.JWT_SECRET_KEY);
+
+        if(validUser && verifyToken.id){
+            const user = await UserModel.findOne({_id: {$eq: id}, resetToken: token}).select("+password");
+            const decryptHashedPassword = CryptoJS.AES.decrypt(user.password, process.env.PASS_SEC); 
+            const originalPassword = decryptHashedPassword.toString(CryptoJS.enc.Utf8);
+
+            if(password === originalPassword) return errorHandler(res, 422, "New Password must be different from the previous one");
+
+            const newHashedPassword = CryptoJS.AES.encrypt(password, process.env.PASS_SEC).toString();
+            const updatePasswordField = await UserModel.findByIdAndUpdate({_id: id}, {$set: {password: newHashedPassword, confirmPassword: newHashedPassword}}, {new: true}).select("+password");
+
+            if(updatePasswordField){
+                await UserModel.findByIdAndUpdate({_id: id}, {$unset: {resetToken: 1}}, {new: true});
+            }
+
+            res.status(201).json({
+                success: true,
+                message: "Password Updated Successfully !",
+            });
+
+        }else{
+            res.status(401).json({
+                success: false,
+                message: "User not exist"
+            });
+        }
+
+    } catch (error) {
+        res.status(501).json({
+            success: false,
+            message: "Password couldn't updated !",
+            error: error
+        })      
+    }
+});

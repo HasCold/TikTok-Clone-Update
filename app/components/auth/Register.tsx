@@ -75,9 +75,9 @@ const validate = () => {
     } else if (!password) {
         setError({ type: 'password', message: 'A Password is required'})
         isError = true
-    // } else if (password.length < 10) {
-    //     setError({ type: 'password', message: 'The Password needs to be longer'})
-    //     isError = true
+    } else if (password.length < 6) {
+        setError({ type: 'password', message: 'The Password needs to be longer'})
+        isError = true
     } 
     else if (password != confirmPassword) {
     setError({ type: 'password', message: 'The Passwords do not match'})
