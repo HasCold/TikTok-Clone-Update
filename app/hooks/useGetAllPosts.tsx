@@ -1,7 +1,7 @@
 
-const useGetAllPosts = async () => {
+const useGetAllPosts = async (page: number) => {
     try {
-        const res = await fetch("/api/post/getAllPosts", {
+        const res = await fetch(`/api/post/getAllPosts?page=${page}`, {
             method: "GET",
             headers: {
                 "Content-Type": "application/json"
@@ -9,7 +9,7 @@ const useGetAllPosts = async () => {
         });
 
         const data = await res.json();
-        return data.multiplePosts;
+        return data;
     } catch (error) {
         console.warn(error);
         throw error;

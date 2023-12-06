@@ -34,13 +34,22 @@ export interface Post {
     createdAt?: string | undefined;
 }
 
-export type PostWithProfile = Omit<Post, "profile_id"> & {
+export type PostType = Omit<Post, "profile_id"> & {
     profile_id: {
         _id: string
         user_id: string;
         name: string;
         image: string;
     }
+}
+
+export type PostWithProfile = {
+    multiplePosts: PostType[],
+    pagination:[{
+        success: boolean;
+        TotalDocuments: number;
+        Pages: number;
+    }]
 }
 
 export interface Like {

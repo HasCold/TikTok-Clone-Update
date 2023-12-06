@@ -5,16 +5,17 @@ import ClientOnly from "./components/ClientOnly";
 import { usePostStore } from "./stores/post";
 import { useEffect, useMemo } from "react";
 import PostMain from "./components/PostMain";
+import Pagination from "./components/Pagination";
 
 export default function Home() {
   let {allPosts, setAllPosts, setPostsByUser, postsByUser} = usePostStore();
   
-  useEffect(() => {
-    setAllPosts()
-  }, []);
+  // useEffect(() => {
+  //   setAllPosts()
+  // }, []);
 
   const MemoizedPostMainComponents = useMemo(() => {
-    return allPosts.map((post, index) => (
+    return allPosts?.multiplePosts?.map((post, index) => (
       <PostMain post={post} key={index} />
     ));
   }, [allPosts, setPostsByUser]);
@@ -29,6 +30,8 @@ export default function Home() {
         ))} */}
         {MemoizedPostMainComponents}
       </ClientOnly>
+
+      <Pagination />
     </div>
     </MainLayout>
     </>

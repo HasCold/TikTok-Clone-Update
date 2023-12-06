@@ -6,10 +6,10 @@ import useGetPostById from '../hooks/useGetPostById';
 import useGetAllPosts from '../hooks/useGetAllPosts';
 
 interface PostStore {
-    allPosts: PostWithProfile[];
+    allPosts: PostWithProfile | null;
     postsByUser?: Post[] | Error ;
     postById: PostWithProfile | null;
-    setAllPosts: () => void;
+    setAllPosts: (page: number) => void;
     setPostsByUser: (profileId: string, token: string | null) => void;
     setPostById: (postId: string, token: string | null) => void;
 }
@@ -18,12 +18,12 @@ export const usePostStore = create<PostStore>()(
     devtools(
         persist(
             (set) => ({
-                allPosts: [],
+                allPosts: null,
                 postsByUser: [],
                 postById: null,
 
-                setAllPosts: async () => {
-                    const result = await useGetAllPosts()
+                setAllPosts: async (page) => {
+                    const result = await useGetAllPosts(page)
                     set({ allPosts: result });
                 },
                 setPostsByUser: async (profileId: string, token) => {

@@ -113,19 +113,41 @@ export const getPostById = asyncErrorHandler(async (req: Request, res: Response)
 
 // GET All Post 
 export const getAllPosts = asyncErrorHandler(async (req: Request, res: Response) => {
+    const page = Number(req.query.page) || 1;   // Ensure page is always a number ; By explicitly converting req.query.page to a number using Number()
+    const ITEM_PER_PAGE = 5;
+    
     try {
+        const skip: number = (page - 1) * ITEM_PER_PAGE;  // (2 page - 1) = 1 * 5 = 5 so it means we skip first 5 items on the second page 
+
         if(req.method !== "GET") return errorHandler(res, 500, "Only GET method is allowed");
 
-        const multiplePosts = await post.find({}, {_id: 1, fileName: 1, originalName: 1, text: 1, profile_id: 1, createdAt: 1}).sort({_id: -1}).populate({
+        const countDocs = await post.countDocuments();
+        // console.log(countDocs);
+
+        const multiplePosts = await post.find({}, {_id: 1, fileName: 1, originalName: 1, text: 1, profile_id: 1, createdAt: 1})
+        .sort({_id: -1})
+        .limit(ITEM_PER_PAGE)
+        .skip(skip)
+        .populate({
             path: "profile_id",
             select: "user_id name image"
         });
 
+        // Below method is to set the logic for the pages render on our UI
+        const pageCount = Math.ceil(countDocs/ITEM_PER_PAGE);  // 8 posts / 5 items -->> Math.ceil --> 2 pages for the 8 posts
+
         if(!multiplePosts) return errorHandler(res, 404, "Posts Not Found");
 
         res.status(201).json({
-            sucess: true,
-            multiplePosts
+            multiplePosts,
+            pagination: [
+                {
+                    sucess: true,
+                    TotalDocuments: countDocs,
+                    Pages: pageCount
+                }
+            ] 
+            
         })
 
     } catch (error) {
