@@ -114,7 +114,7 @@ export const getPostById = asyncErrorHandler(async (req: Request, res: Response)
 // GET All Post 
 export const getAllPosts = asyncErrorHandler(async (req: Request, res: Response) => {
     const page = Number(req.query.page) || 1;   // Ensure page is always a number ; By explicitly converting req.query.page to a number using Number()
-    const ITEM_PER_PAGE = 5;
+    const ITEM_PER_PAGE = 6;
     
     try {
         const skip: number = (page - 1) * ITEM_PER_PAGE;  // (2 page - 1) = 1 * 5 = 5 so it means we skip first 5 items on the second page 
