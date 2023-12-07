@@ -30,9 +30,12 @@ const Profile: React.FC<ProfilePageProps> = ({params}) => {
     // setCurrentProfile(user?.user_id, token);
     setCurrentProfile(params?.id, token)
     setPostsByUser(params?.id, token);
-    setCurrentImage(params?.id, token);
-  }, [setCurrentImage, setCurrentProfile]);
+  }, [currentProfile]);
   
+  useEffect(() => {
+    setCurrentImage(params?.id, token);
+  }, [setCurrentImage, currentProfile])
+
   useEffect(() => {
     setUserLikedPost(params.id, token);
   }, [likesByPost, params.id])
