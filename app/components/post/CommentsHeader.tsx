@@ -94,7 +94,7 @@ const CommentsHeader: React.FC<CommentHeaderProps> = ({post, params}) => {
     }
   }
 
-  const unlike = async (id: string) => {
+  const unlike = async (id: string | undefined) => {
     try {
       setHasClickedLike(true);
       
@@ -125,7 +125,7 @@ const CommentsHeader: React.FC<CommentHeaderProps> = ({post, params}) => {
     }else{
       likesByPost.forEach(like => {  // This means that will true we will unlike it
         if(user?.user_id && user._id === like.profile_id && like.post_id === params.postId){
-            unlike(like._id)
+            unlike(like?._id)
         }
       })
     }

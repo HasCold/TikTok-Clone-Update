@@ -1,5 +1,5 @@
 
-const useDeleteLike = async (likeId: string, token: string | null) => {
+const useDeleteLike = async (likeId: string | undefined, token: string | null) => {
   
   try {
 

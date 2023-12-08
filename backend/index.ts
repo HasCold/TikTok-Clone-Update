@@ -33,6 +33,7 @@ app.use(cors({
     origin: ["http://localhost:3000", "https://social-media-app.onrender.com"], // Replace with your frontend URL
     credentials: true, // You may need this depending on your use case
 }));
+
 app.use('/uploadedImage', express.static('uploadedImage'));  // set the images path to the frontend
 app.use('/uploadedVideos', express.static('uploadedVideos')); // express.static(): This function is used to serve static files in Express. It takes one argument, which is the directory from which you want to serve static files. In this case, 'uploadedVideos' is the directory where your video files are stored.
 // app.use('/uploadedVideos', ...): This line specifies that any incoming HTTP request to a route that starts with /uploadedVideos will be handled by the static file serving middleware.

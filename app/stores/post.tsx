@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import { persist, devtools, createJSONStorage } from 'zustand/middleware';
-import { Post, PostWithProfile } from '../types';
+import { Post, PostType, PostWithProfile } from '../types';
 import useGetPostsByProfileId from '../hooks/useGetPostsByProfileId';
 import useGetPostById from '../hooks/useGetPostById';
 import useGetAllPosts from '../hooks/useGetAllPosts';
@@ -8,7 +8,7 @@ import useGetAllPosts from '../hooks/useGetAllPosts';
 interface PostStore {
     allPosts: PostWithProfile | null;
     postsByUser?: Post[] | Error ;
-    postById: PostWithProfile | null;
+    postById: PostType | null;
     setAllPosts: (page: number) => void;
     setPostsByUser: (profileId: string, token: string | null) => void;
     setPostById: (postId: string, token: string | null) => void;
