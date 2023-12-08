@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { protectRoutes } from "../middleware/authMiddleware";
-import { createLike, useDeleteLike, useGetLikesByPostId, useGetUserLikedPost } from "../Controller/likeController";
+import { createLike, useDeleteLike, useGetLikesByPostId, useGetUserLikedPost } from "../controller/likeController";
 
 const router = Router();
 

@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { protectRoutes } from "../middleware/authMiddleware";
-import { getAllPosts, getPostById, getVideosByProfileId, uploadVideo, useDeletePostById } from '../Controller/postController';
+import { getAllPosts, getPostById, getVideosByProfileId, uploadVideo, useDeletePostById } from '../controller/postController';
 const uploadMiddleware = require('../middleware/uploadVideoMiddleware');
 
 const router = Router();

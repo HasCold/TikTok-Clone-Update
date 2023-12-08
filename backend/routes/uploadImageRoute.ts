@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { protectRoutes } from "../middleware/authMiddleware";
-import { deleteImagesFromDBAndDirectory, getImageFileNameByProfileId, retrieveImage, uploadFile } from "../Controller/userImageController";
+import { deleteImagesFromDBAndDirectory, getImageFileNameByProfileId, retrieveImage, uploadFile } from "../controller/userImageController";
 const uploadMiddleware = require("../middleware/uploadImageMiddleware");
 
 const router = Router();

@@ -1,6 +1,6 @@
 import {Router} from "express";
 import { protectRoutes } from '../middleware/authMiddleware';
-import { SearchProfileByNames, createProfile, findRandomUsers, profileInfo, updateImageinProfileModel, useGetProfileByUserId, useUpdateProfile } from "../Controller/profileController";
+import { SearchProfileByNames, createProfile, findRandomUsers, profileInfo, updateImageinProfileModel, useGetProfileByUserId, useUpdateProfile } from "../controller/profileController";
 
 const router = Router();
 
