@@ -20,7 +20,7 @@ app.use(express.json()); // Server to accept the json data from frontend
 
 app.use((req: Request, res: Response, next: NextFunction) => {
   // Replace 'http://localhost:3000' with the actual origin of your client application
-  res.header('Access-Control-Allow-Origin', 'http://localhost:3000');
+  res.header('Access-Control-Allow-Origin', ['http://localhost:3000', "https://social-media-app.onrender.com"]);
   res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
   res.header('Access-Control-Allow-Headers', 'Content-Type');
   res.header('Cross-Origin-Resource-Policy', 'cross-origin');
@@ -30,7 +30,7 @@ app.use((req: Request, res: Response, next: NextFunction) => {
 })
 
 app.use(cors({
-    origin: "http://localhost:3000", // Replace with your frontend URL
+    origin: ["http://localhost:3000", "https://social-media-app.onrender.com"], // Replace with your frontend URL
     credentials: true, // You may need this depending on your use case
 }));
 app.use('/uploadedImage', express.static('uploadedImage'));  // set the images path to the frontend
