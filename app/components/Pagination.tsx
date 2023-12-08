@@ -36,11 +36,12 @@ const Pagination = () => {
     <div className='flex'>
     <button
     onClick={() => handlePrevBtn()}
-    className='bg-gray-100 rounded-lg w-[6.5vw] font-semibold hover:bg-gray-200 border-4 hover:border-pink-600'
+    className={`${page === 1 ? 'opacity-0' : ''} bg-gray-100 rounded-lg xl:w-[6.5vw] lg:w-[8vw] md:w-[6.5vw] sm:w-[5.5vw] font-semibold hover:bg-gray-200 border-4 hover:border-pink-600`}
     type='button'>
       Prev
     </button>
 
+    <div className='mx-0.5'/>
     {
     // pageCount.toString().split("").map(Number)
     // Array.from({length: pageCount}).map((_, index) => (
@@ -51,17 +52,19 @@ const Pagination = () => {
             onClick={() => {
               setPage(index + 1)
             }}
-            className={`${page === index + 1 ? `bg-[#006CFD] text-white rounded-lg w-[2.1vw] h-[5vh] align-middle` : 'align-middle rounded-lg w-[10vw] bg-gray-100 text-black hover:bg-gray-200'} rounded-md w-[2.1vw] h-[5vh] font-semibold`}
+            className={`${page === index + 1 ? `bg-[#006CFD] text-white rounded-lg max-[550px]:w-[5.5vw] xl:w-[2.1vw] lg:w-[3.5vw] md:w-[3vw] sm:w-[3vw] h-[5vh] align-middle` : 'align-middle rounded-lg max-[550px]:w-[5.5vw] xl:w-[2.1vw] lg:w-[3.5vw] md:w-[3vw] sm:w-[3vw] bg-gray-100 text-black hover:bg-gray-200'} rounded-md w-[2.1vw] h-[5vh] font-semibold`}
             >
                   {index + 1}
             </button> 
             </div>
         ))    
   }
-    
+
+    <div className='mx-0.5'/>
+
     <button 
     onClick={() => handleNextBtn()}
-    className='bg-gray-100 rounded-lg w-[6.5vw] font-semibold hover:bg-gray-200 border-4 hover:border-pink-600'
+    className={`${page === pageCount ? 'opacity-0' : ''} bg-gray-100 rounded-lg xl:w-[6.5vw] lg:w-[8vw] md:w-[6.5vw] sm:w-[5.5vw] font-semibold hover:bg-gray-200 border-4 hover:border-pink-600`}
     type="button">
       Next
     </button>
