@@ -23,7 +23,7 @@ export default function Home() {
   return (
     <>
     <MainLayout>
-    <div className="mt-[80px] w-[calc(100%-90px)] max-w-[690px] ml-auto"> 
+    <div className="mt-[80px] xl:w-[calc(100%-90px)] max-w-[690px] ml-auto max-[600px]:w-[100vw] max-[400px]:ml-4"> 
       <ClientOnly>
         {/* {allPosts.map((post, index) => (
         <PostMain post={post} key={index}/>
