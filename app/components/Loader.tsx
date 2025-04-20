@@ -1,5 +1,3 @@
-'use client';
-
 import { HashLoader, PuffLoader } from "react-spinners";
 
 const Loader = () => {
